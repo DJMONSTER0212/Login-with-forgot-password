@@ -37,7 +37,7 @@ router.post("/forgot",async(req,res)=>{
                 from :"devanshjain02122003@gmail.com",
                 to:email,
                 subject:"Password Reset Link",
-                text:`This Link is valid for 2 min http://localhost:3000/reset-password/${user._id}/${setUserToken.verifyToken}`
+                text:`This Link is valid for 2 min https://aquamarine-eclair-43a1a7.netlify.app/reset-password/${user._id}/${setUserToken.verifyToken}`
             }
             transporter.sendMail(mailOptions,(error,info)=>{
                 if(error){
@@ -68,7 +68,6 @@ router.get("/forgot/:id/:token",async(req,res)=>{
     try {
         const validUser = await User.findOne({_id:id,verifyToken : token});
         const verifyToken = jwt.verify(token,process.env.SECRET)
-        // console.log(verifyToken)
         if(verifyToken._id&&validUser){
             res.status(201).json({
                 status:201,
@@ -89,47 +88,17 @@ router.get("/forgot/:id/:token",async(req,res)=>{
 })
 
 
-// router.post("/reset/:id/:token", async(req,res) => {
-//     const { id, token } = req.params;
-//     const {password} =req.body;
-//     console.log(password)
-//     try {
-//         const validUser = await User.findOne({ _id: id, verifyToken: token });
-//         const verifyToken = jwt.verify(token, process.env.SECRET)
-//         // console.log(verifyToken)
-//         if (verifyToken._id && validUser) {
-//             res.status(201).json({
-//                 status: 201,
-//                 validUser
-//             })
-//         } else {
-//             res.status(401).json({
-//                 status: 401,
-//                 message: "User Doesnot exist"
-//             })
-//         }
-//     } catch (error) {
-//         res.status(401).json({
-//             status: 401,
-//             error
-//         })
-//     }
-// })
-
 router.post("/reset/:id/:token", async (req, res) => {
     const { id, token } = req.params;
     const {password} = req.body;
-    console.log(password)
     try {
         const validUser = await User.findOne({ _id: id, verifyToken: token });
         const verifyToken = await jwt.verify(token, process.env.SECRET)
-        // console.log(verifyToken)
         if (verifyToken._id && validUser) {
             const salt = await bcrypt.genSalt(10);
             const newpassword = await bcrypt.hash(password,salt)
             const setNewUser = await User.findByIdAndUpdate({_id:id},{password:newpassword});
             await setNewUser.save();
-            console.log("new password",setNewUser)
             res.status(201).json({
                 status: 201,
                 setNewUser,
