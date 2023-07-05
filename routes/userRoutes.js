@@ -37,7 +37,7 @@ router.post("/forgot",async(req,res)=>{
                 from :"devanshjain02122003@gmail.com",
                 to:email,
                 subject:"Password Reset Link",
-                text:`This Link is valid for 2 min https://aquamarine-eclair-43a1a7.netlify.app/reset-password/${user._id}/${setUserToken.verifyToken}`
+                text:`This Link is valid for 2 min https://dj-auth-e1z6.onrender.com/reset-password/${user._id}/${setUserToken.verifyToken}`
             }
             transporter.sendMail(mailOptions,(error,info)=>{
                 if(error){
